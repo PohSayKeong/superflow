@@ -22,7 +22,9 @@ const Home: NextPage = () => {
 							SuperFlow provides an effective and powerful way to create and
 							manage your subscriptions
 						</p>
-						<Link href="/dashboard" className={styles.button} target="_blank">Launch App</Link>
+						<Link href="/dashboard" className={styles.button} target="_blank">
+							Launch App
+						</Link>
 						<div className={styles.benefits}>
 							<div className={styles.benefit}>
 								<img src="/asset1.png" alt="" className={styles.benefit_img} />
@@ -31,13 +33,23 @@ const Home: NextPage = () => {
 								</p>
 							</div>
 							<div className={styles.benefit}>
-								<img src="/asset2.png" alt="" className={styles.benefit_img} style={{width:"33.5%"}}/>
+								<img
+									src="/asset2.png"
+									alt=""
+									className={styles.benefit_img}
+									style={{ width: "33.5%" }}
+								/>
 								<p className={styles.benefit_description}>
 									Flexibility & <br /> Scalability
 								</p>
 							</div>
 							<div className={styles.benefit}>
-								<img src="/asset3.png" alt="" className={styles.benefit_img} style={{width:"35%"}}/>
+								<img
+									src="/asset3.png"
+									alt=""
+									className={styles.benefit_img}
+									style={{ width: "35%" }}
+								/>
 								<p className={styles.benefit_description}>
 									Better <br /> Ownership
 								</p>

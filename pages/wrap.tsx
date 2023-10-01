@@ -2,12 +2,11 @@ import type { NextPage } from "next"
 import Head from "next/head"
 import React from "react"
 import ApplicationLayout from "../components/ApplicationLayout"
-import DemoContent from "../components/DemoContent"
-
-import styles from "../styles/Demo.module.css"
+import styles from "../styles/Dashboard.module.css"
 import { isMounted } from "../hooks/isMounted"
+import WrapToken from "../components/WrapToken"
 
-const Demo: NextPage = () => {
+const Dashboard: NextPage = () => {
 	const mounted = isMounted()
 
 	return (
@@ -19,10 +18,7 @@ const Demo: NextPage = () => {
 			<ApplicationLayout isActive={[0, 0, 1]}>
 				<main className={styles.container}>
 					<div className={styles.contents}>
-						<div className={styles.headerTag}>
-							<h2 className={styles.headerTagTxt}>Demo:</h2>
-						</div>
-						<div>{mounted ? <DemoContent /> : null}</div>
+						<div>{mounted ? <WrapToken /> : null}</div>
 					</div>
 				</main>
 			</ApplicationLayout>
@@ -30,4 +26,4 @@ const Demo: NextPage = () => {
 	)
 }
 
-export default Demo
+export default Dashboard

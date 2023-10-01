@@ -4,27 +4,45 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"format": "npx prettier --write ."
+		"format": "npx prettier --write .",
+		"fork": "npx hardhat node --fork https://rpc-evm-sidechain.xrpl.org/"
 	},
 	"dependencies": {
 		"@next/font": "^13.0.6",
-		"@rainbow-me/rainbowkit": "^0.8.1",
+		"@rainbow-me/rainbowkit": "^1.0.11",
 		"@wagmi/chains": "^0.1.2",
 		"alchemy-sdk": "^2.2.4",
-		"ethers": "^5.7.2",
+		"ethers": "^6.7.1",
 		"next": "latest",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"wagmi": "^0.9.3"
+		"viem": "^1.11.1",
+		"wagmi": "^1.4.2"
 	},
 	"devDependencies": {
+		"@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+		"@nomicfoundation/hardhat-ethers": "^3.0.0",
+		"@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+		"@nomicfoundation/hardhat-toolbox": "^3.0.0",
+		"@nomicfoundation/hardhat-verify": "^1.0.0",
+		"@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
+		"@typechain/ethers-v6": "^0.4.0",
+		"@typechain/hardhat": "^8.0.0",
+		"@types/chai": "^4.2.0",
+		"@types/mocha": ">=9.1.0",
 		"@types/node": "18.11.3",
 		"@types/react": "18.0.21",
 		"@types/react-dom": "18.0.6",
 		"autoprefixer": "^10.4.12",
+		"chai": "^4.2.0",
+		"hardhat": "^2.17.3",
+		"hardhat-gas-reporter": "^1.0.8",
 		"postcss": "^8.4.18",
 		"prettier": "2.8.1",
+		"solidity-coverage": "^0.8.1",
 		"tailwindcss": "^3.2.1",
+		"ts-node": ">=8.0.0",
+		"typechain": "^8.2.0",
 		"typescript": "4.8.4"
 	}
 }

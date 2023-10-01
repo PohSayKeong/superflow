@@ -12,8 +12,9 @@ import {
 	useContractEvent,
 } from "wagmi"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { abi } from "../utils/FactoryAbi"
 import { isMounted } from "../hooks/isMounted"
+import fintechFactory from "../deployment/fintechfactory.json"
+import fintechFactoryAbi from "../artifacts/contracts/fintech_factory.sol/subscriptionFactory.json"
 
 const Subscription: NextPage = () => {
 	const mounted = isMounted()
@@ -21,66 +22,74 @@ const Subscription: NextPage = () => {
 	const [subscriptionDetails, setSubscriptionDetails] = useState({
 		subscriptionName: "",
 		monthlyPrices: "",
-		isUSDCAccepted: false,
-		isDAIAccepted: false,
 		isUSDTAccepted: false,
+		isNativeAccepted: false,
 		isRecurringPayment: false,
-		isStreamingPayment: false
+		isStreamingPayment: false,
 	})
 
-	const { subscriptionName, monthlyPrices, 
-		isUSDCAccepted, isDAIAccepted, isUSDTAccepted, 
-		isRecurringPayment, isStreamingPayment
+	const {
+		subscriptionName,
+		monthlyPrices,
+		isUSDTAccepted,
+		isNativeAccepted,
+		isRecurringPayment,
+		isStreamingPayment,
 	} = subscriptionDetails
 
 	const { address, isConnected } = useAccount()
-	const { config } = usePrepareContractWrite({ //FACTORY
-		address: "0x9e326385f0DFCEEc61ff255a2616484C257a23CC",
-		abi: abi,
+	const { config } = usePrepareContractWrite({
+		//FACTORY
+		address: fintechFactory.address as `0x${string}`,
+		abi: fintechFactoryAbi.abi,
 		functionName: "createSubscription",
 		args: [
 			convertPricesToArray(monthlyPrices),
 			subscriptionName,
 			address,
-			isUSDCAccepted,
-			isDAIAccepted,
 			isUSDTAccepted,
+			isNativeAccepted,
 			isRecurringPayment,
-			isStreamingPayment
+			isStreamingPayment,
 		],
 	})
-	useContractEvent({ //FACTORY
-		address: '0x9e326385f0DFCEEc61ff255a2616484C257a23CC',
-		abi: abi,
-		eventName: 'SubscriptionCreated',
+	useContractEvent({
+		//FACTORY
+		address: fintechFactory.address as `0x${string}`,
+		abi: fintechFactoryAbi.abi,
+		eventName: "SubscriptionCreated",
 		listener(subscription) {
-		  console.log(subscription)
+			console.log(subscription)
 		},
 	})
 
-	const { data, isLoading, isSuccess, error, write } = useContractWrite(config)
+	const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
-	var {
-		data: txData,
-		isSuccess: txSuccess,
-		error: txError,
-	} = useWaitForTransaction({
+	var { isSuccess: txSuccess } = useWaitForTransaction({
 		hash: data?.hash,
 	})
 
-	function handleChange(event) {
-		if (event.target.type === "checkbox") {
-			setSubscriptionDetails(prev => ({...prev, [event.target.name]: !prev[event.target.name]}))
+	function handleChange(event: Event) {
+		if (!event.target) return
+		const target = event.target as HTMLInputElement
+		if (target.type === "checkbox") {
+			setSubscriptionDetails((prev) => ({
+				...prev,
+				[target.name]: !prev[target.name],
+			}))
 		} else {
-			setSubscriptionDetails(prev => ({...prev, [event.target.name]: event.target.value}))
+			setSubscriptionDetails((prev) => ({
+				...prev,
+				[target.name]: target.value,
+			}))
 		}
 	}
 
-	function convertPricesToArray(monthlyPrices) {
+	function convertPricesToArray(monthlyPrices: string) {
 		return monthlyPrices.split(",").map(Number)
 	}
 
-	function handleSubmit(event) {
+	function handleSubmit(event: Event) {
 		event.preventDefault()
 		write?.()
 	}
@@ -90,12 +99,11 @@ const Subscription: NextPage = () => {
 		// hi.reset()y
 		// not sure why the above doesnt work
 
-		var element = document.getElementById("card");
+		var element = document.getElementById("card")
 		if (element != null) {
-			element.classList.toggle(styles.is_flipped);
+			element.classList.toggle(styles.is_flipped)
 		}
 	}
-	
 
 	return (
 		<div>
@@ -104,11 +112,14 @@ const Subscription: NextPage = () => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<ApplicationLayout isActive={[0,1,0]}>
+			<ApplicationLayout isActive={[0, 1, 0]}>
 				<main className={`${styles.scene}`}>
-					<div id = "card" className={`${styles.card} ${txSuccess && styles.is_flipped}`}>
+					<div
+						id="card"
+						className={`${styles.card} ${txSuccess && styles.is_flipped}`}
+					>
 						<form
-							id = "mainForm"
+							id="mainForm"
 							className={`${styles.card__face} ${styles.card__face__front}`}
 							onSubmit={handleSubmit}
 						>
@@ -140,31 +151,15 @@ const Subscription: NextPage = () => {
 									required
 								/>
 							</label>
-							Accepted stablecoins:
+							Accepted tokens:
 							<label className={styles.stablecoin_box}>
-								<p className={styles.subscription_text}>USDC:</p>
-								<label className = {styles.switch}>
-									<input									
-										type="checkbox"
-										name="isUSDCAccepted"
-										value="true"
-										onChange={handleChange}
-									/>
-									<span className={styles.slider}></span>
-								</label>
-								<p className={styles.subscription_text}>DAI:</p>
-								<label className = {styles.switch}>
-									<input									
-										type="checkbox"
-										name="isDAIAccepted"
-										value="true"
-										onChange={handleChange}
-									/>
-									<span className={styles.slider}></span>
-								</label>
 								<p className={styles.subscription_text}>USDT:</p>
-								<label className = {styles.switch}>
-									<input									
+								<img
+									src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Tether-USDT-icon.png"
+									className={styles.token_icon}
+								/>
+								<label className={styles.switch}>
+									<input
 										type="checkbox"
 										name="isUSDTAccepted"
 										value="true"
@@ -172,12 +167,25 @@ const Subscription: NextPage = () => {
 									/>
 									<span className={styles.slider}></span>
 								</label>
+								<p className={styles.subscription_text}>XRP:</p>
+								<img
+									src="https://cdn-icons-png.flaticon.com/512/6675/6675833.png"
+									className={styles.token_icon}
+								/>
+								<label className={styles.switch}>
+									<input
+										type="checkbox"
+										name="isNativeAccepted"
+										value="true"
+										onChange={handleChange}
+									/>
+									<span className={styles.slider}></span>
+								</label>
 							</label>
-
 							<label className={styles.subscription_box}>
 								<p className={styles.subscription_text}>Recurring payment:</p>
-								<label className = {styles.switch}>
-									<input									
+								<label className={styles.switch}>
+									<input
 										type="checkbox"
 										name="isRecurringPayment"
 										value="true"
@@ -187,8 +195,8 @@ const Subscription: NextPage = () => {
 								</label>
 
 								<p className={styles.subscription_text}>Streaming payment:</p>
-								<label className = {styles.switch}>
-									<input									
+								<label className={styles.switch}>
+									<input
 										type="checkbox"
 										name="isStreamingPayment"
 										value="true"
@@ -213,7 +221,7 @@ const Subscription: NextPage = () => {
 										</button>
 									) : (
 										<div className={styles.connectButton}>
-										<ConnectButton/>
+											<ConnectButton />
 										</div>
 									)
 								) : null}
@@ -236,8 +244,8 @@ const Subscription: NextPage = () => {
 									View transaction details
 								</a>
 								<form>
-									<button  className={styles.button} onClick={handleFlip}>
-										Deploy another contract									
+									<button className={styles.button} onClick={handleFlip}>
+										Deploy another contract
 									</button>
 								</form>
 								<Link className={styles.button} href="/dashboard">
